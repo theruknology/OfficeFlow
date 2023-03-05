@@ -6,6 +6,7 @@ import Widgets from "./Widgets";
 
 const Dashboard = (props) => {
   const settings = useSelector((state) => state.settings);
+  console.log('im up')
 
   return (
     <div className="pt-20 px-4 flex flex-col gap-6">
@@ -13,7 +14,7 @@ const Dashboard = (props) => {
       <h2 className="text-2xl font-light italic">
         Welcome{settings.name !== "" ? " back, " + settings.name : ", New User"}{" "}
       </h2>
-      <Widgets />
+      <Widgets toggleModals={props.toggleModals}/>
       <TaskList />
     </div>
   );

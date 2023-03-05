@@ -6,14 +6,14 @@ const Backdrop = (props) => {
     <div
       onClick={props.onClick}
       className="fixed top-0 left-0 z-20 w-full overflow-hidden h-full
-  bg-gray-900 bg-opacity-90"
+  bg-gray-900 bg-opacity-70"
     ></div>
   );
 };
 
 const ModalOverlay = (props) => {
   return (
-    <div className="fixed w-fit rounded-lg py-16 px-8 bg-white h-fit z-30 border  bottom-2/4 right-2/4 translate-x-2/4 translate-y-2/4 max-h-[600px] min-h-[400px] overflow-y-scroll">
+    <div className="fixed w-fit min-w-[300px] rounded-lg py-16 px-8 bg-white h-fit z-30 border  bottom-2/4 right-2/4 translate-x-2/4 translate-y-2/4 max-h-[600px] min-h-[400px] overflow-auto">
       {props.children}
     </div>
   );
