@@ -79,3 +79,7 @@ const tasksReducer = (state = initialState, action) => {
       return state;
   }
 };
+
+const store = createStore(tasksReducer);
+
+export default store;
