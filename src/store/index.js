@@ -5,7 +5,12 @@ const initialState = {
   completed: [],
   settings: {
     name: "",
-    defaultOptions: ["Step 1", "Step 2", "Step 3", "Step 4"],
+    defaultOptions: [
+      { id: 0, name: "Step 1", checked: false },
+      { id: 1, name: "Step 2", checked: false },
+      { id: 2, name: "Step 3", checked: false },
+      { id: 3, name: "Step 4", checked: false },
+    ],
   },
 };
 
@@ -13,6 +18,18 @@ const editTodo = (payload, list) => {
   const todos = [...list];
   const todo = todos.find((todo) => todo.id === payload.id);
   todo.score = payload.score > todo.score ? payload.score : todo.score;
+  return todos;
+};
+
+const toggleTodo = (taskId, optionId, list) => {
+  const todos = [...list];
+  const todo = todos.find((todo) => todo.id === taskId);
+
+  todo.options.map((itm) => {
+    itm.checked = itm.id === optionId ? !itm.checked : itm.checked;
+  });
+
+  console.log(list);
   return todos;
 };
 
@@ -74,6 +91,30 @@ const tasksReducer = (state = initialState, action) => {
       return {
         ...state,
         completed: deleteCompleted(action.payload, state.completed),
+      };
+    case "TOGGLE_TODO":
+      return {
+        ...state,
+        tasksList: toggleTodo(
+          action.payload.taskId,
+          action.payload.optionId,
+          state.tasksList
+        ),
+      };
+    case "UPDATE_SETTINGS":
+      return {
+        ...state,
+        settings: action.payload,
+      };
+    case "UPDATE_TASKS":
+      return {
+        ...state,
+        tasksList: action.payload,
+      };
+    case "UPDATE_COMPLETED":
+      return {
+        ...state,
+        completed: action.payload,
       };
     default:
       return state;

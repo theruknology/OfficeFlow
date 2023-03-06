@@ -1,4 +1,5 @@
-import React, { useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import Dashboard from "./components/Dashboard/Dashboard";
 import NewTask from "./components/NewTask/NewTask";
@@ -22,10 +23,51 @@ const reducer = (state, action) => {
 };
 
 export default function App() {
-  // const [newTaskModal, setNewTaskModal] = useState(true);
-  // const [settingsModal, setSettingsModal] = useState(false);
-
   const [content, dispatchContent] = useReducer(reducer, initialState);
+
+  const tasksList = useSelector((state) => state.tasksList);
+  const settings = useSelector((state) => state.settings);
+  const completed = useSelector((state) => state.completed);
+  const dispatcher = useDispatch();
+
+  useEffect(() => {
+    const storedTasks = JSON.parse(localStorage.getItem("TASKS"));
+    if (storedTasks) {
+      dispatcher({
+        type: "UPDATE_TASKS",
+        payload: storedTasks,
+      });
+    }
+
+    const storedSettings = JSON.parse(localStorage.getItem("SETTINGS"));
+    if (storedSettings) {
+      dispatcher({
+        type: "UPDATE_SETTINGS",
+        payload: storedSettings,
+      });
+    }
+
+    const storedCompleted = JSON.parse(localStorage.getItem("COMPLETED"));
+    if (storedCompleted) {
+      dispatcher({
+        type: "UPDATE_COMPLETED",
+        payload: storedCompleted,
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("TASKS", JSON.stringify(tasksList));
+  }, [tasksList]);
+
+  useEffect(() => {
+    localStorage.setItem("SETTINGS", JSON.stringify(settings));
+  }, [settings]);
+
+  useEffect(() => {
+    localStorage.setItem("COMPLETED", JSON.stringify(completed));
+  }, [completed]);
+
   const closeNewTaskHandler = () => {
     dispatchContent({ type: "NEW_TASK", payload: false });
   };
@@ -37,9 +79,7 @@ export default function App() {
     <>
       {content.newTaskModal && <NewTask onClose={closeNewTaskHandler} />}
       <Window>
-        <Dashboard
-          toggleModals={openModalHandler}
-        />
+        <Dashboard toggleModals={openModalHandler} />
       </Window>
     </>
   );
