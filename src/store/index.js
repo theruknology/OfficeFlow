@@ -29,6 +29,14 @@ const toggleTodo = (taskId, optionId, list) => {
     itm.checked = itm.id === optionId ? !itm.checked : itm.checked;
   });
 
+  let score = 0;
+
+  todo.options.map((itm) => {
+    score = itm.checked ? score + 1 : score;
+  })
+
+  todo.score = score;
+
   console.log(list);
   return todos;
 };
@@ -48,7 +56,7 @@ const deleteCompleted = (id, list) => {
 const tasksReducer = (state = initialState, action) => {
   switch (action.type) {
     case "ADD_TASK":
-      return { ...state, tasksList: [...state.tasksList, action.payload] };
+      return { ...state, tasksList: [action.payload, ...state.tasksList] };
     case "DELETE_TASK":
       return {
         ...state,
@@ -58,7 +66,7 @@ const tasksReducer = (state = initialState, action) => {
       return {
         ...state,
         settings: {
-          ...settings,
+          ...state.settings,
           name: action.payload,
         },
       };
@@ -66,7 +74,7 @@ const tasksReducer = (state = initialState, action) => {
       return {
         ...state,
         settings: {
-          ...settings,
+          ...state.settings,
           defaultOptions: action.payload,
         },
       };

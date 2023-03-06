@@ -13,7 +13,7 @@ const Backdrop = (props) => {
 
 const ModalOverlay = (props) => {
   return (
-    <div className="fixed w-fit min-w-[300px] rounded-lg py-16 px-8 bg-white h-fit z-30 border  bottom-2/4 right-2/4 translate-x-2/4 translate-y-2/4 max-h-[600px] min-h-[400px] overflow-auto">
+    <div className="fixed w-fit min-w-[min(500px, 100%)] rounded-lg py-16 px-8 bg-white h-fit z-30 border  bottom-2/4 right-2/4 translate-x-2/4 translate-y-2/4 max-h-[600px] min-h-[400px] overflow-auto">
       {props.children}
     </div>
   );

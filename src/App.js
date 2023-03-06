@@ -1,14 +1,17 @@
 import React, { useEffect, useReducer, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import Completed from "./components/Completed/Completed";
 
 import Dashboard from "./components/Dashboard/Dashboard";
 import NewTask from "./components/NewTask/NewTask";
+import Settings from "./components/Settings/Settings";
 import Window from "./components/UI/Window";
 import "./index.css";
 
 const initialState = {
   newTaskModal: false,
   settingsModal: false,
+  completedModal: false,
 };
 
 const reducer = (state, action) => {
@@ -17,6 +20,8 @@ const reducer = (state, action) => {
       return { ...state, newTaskModal: action.payload };
     case "SETTINGS_MODAL":
       return { ...state, settingsModal: action.payload };
+    case "COMPLETED_MODAL":
+      return { ...state, completedModal: action.payload };
     default:
       return state;
   }
@@ -56,7 +61,25 @@ export default function App() {
     }
   }, []);
 
+  const addToCompleteHandler = (payload) => {
+    dispatcher({
+      type: "ADD_TO_COMPLETED",
+      payload: {
+        id: payload.id,
+        title: payload.title,
+      },
+    });
+    dispatcher({
+      type: "DELETE_TASK",
+      payload: payload.id,
+    });
+  };
+
   useEffect(() => {
+    const completed = tasksList.filter((itm) => itm.score === 4);
+    completed.map((itm) => {
+      addToCompleteHandler({ id: itm.id, title: itm.title });
+    });
     localStorage.setItem("TASKS", JSON.stringify(tasksList));
   }, [tasksList]);
 
@@ -71,6 +94,13 @@ export default function App() {
   const closeNewTaskHandler = () => {
     dispatchContent({ type: "NEW_TASK", payload: false });
   };
+  const closeSettingsHandler = () => {
+    dispatchContent({ type: "SETTINGS_MODAL", payload: false });
+  };
+  const closeCompletedHandler = () => {
+    dispatchContent({ type: "COMPLETED_MODAL", payload: false });
+  };
+
   const openModalHandler = (content) => {
     dispatchContent({ type: content, payload: true });
   };
@@ -78,6 +108,9 @@ export default function App() {
   return (
     <>
       {content.newTaskModal && <NewTask onClose={closeNewTaskHandler} />}
+      {content.settingsModal && <Settings onClose={closeSettingsHandler} />}
+      {content.completedModal && <Completed onClose={closeCompletedHandler} />}
+
       <Window>
         <Dashboard toggleModals={openModalHandler} />
       </Window>
